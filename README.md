@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -124,7 +123,7 @@
                             </div>
                             <ul class="space-y-2">
                                 <li class="flex justify-between text-sm">
-                                    <span class="text-zinc-500">✈️ 항공권 </span>
+                                    <span class="text-zinc-500">✈️ 항공권(최저가) </span>
                                     <span class="font-bold text-zinc-700">400,000원</span>
                                 </li>
                                 <li class="flex justify-between text-sm">
