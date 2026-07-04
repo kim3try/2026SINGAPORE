@@ -3,379 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>싱가포르 나 홀로 여행 스마트 가이드</title>
+    <title>싱가포르 3박 4일 스마트 여행 대시보드</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap');
-        
-        body {
-            font-family: 'Pretendard', sans-serif;
-            background-color: #FDFBF7;
-            color: #333;
-        }
-
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: transform 0.3s ease;
-        }
-
-        .glass-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .nav-tab.active {
-            background-color: #008080;
-            color: white;
-        }
-
-        .day-content {
-            display: none;
-        }
-
-        .day-content.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #FDFBF7;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #D1D5DB;
-            border-radius: 4px;
+        body { font-family: 'Pretendard', sans-serif; background-color: #fafaf9; }
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 500px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 300px; 
+            max-height: 350px; 
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="text-zinc-800 pb-12">
 
-    <!-- Chosen Palette: Tropical Minimalist (Cream Background, Deep Teal Primary, Soft Coral Accent) -->
-    <!-- Application Structure Plan: 
-        1. Hero Section: 핵심 요약 및 테마 소개.
-        2. Dashboard Section: 국가 정보와 날씨 데이터를 시각화하여 첫인상 결정.
-        3. Interactive Itinerary: 탭 인터페이스를 사용하여 3박 4일 일정을 사용자가 선택적으로 탐색. 
-        4. Budget Analysis: Chart.js를 이용해 예산 비중을 시각화하여 경제적 판단 지원.
-        5. Essential Tips: 법규 및 짐 싸기 팁을 카드 형태로 배치.
-        이 구조는 텍스트 위주의 보고서를 직관적인 데이터 대시보드로 변환하여 사용자가 필요한 정보만 빠르게 찾도록 설계되었습니다. -->
-    <!-- Visualization & Content Choices: 
-        - Budget -> Doughnut Chart (Chart.js) -> 전체 비용 중 항목별 비중 확인.
-        - Weather -> Bar Chart (Chart.js) -> 온도 범위 시각화.
-        - Timeline -> Vertical Step List -> 동선의 논리적 흐름 표현.
-        - Cards -> Hover Effects -> 사용자 인터랙션 유도.
-        - NO SVG/Mermaid: 모든 아이콘은 유니코드와 CSS를 활용하여 구현. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <!-- Header -->
-        <header class="mb-12 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-[#008080] mb-4">🇸🇬 싱가포르 나 홀로 여행 가이드</h1>
-            <p class="text-lg text-gray-600">2026.08.25(화) - 08.28(금) | 대학생 실속 압축형</p>
+        <header class="bg-white rounded-3xl p-6 mb-8 shadow-sm border border-zinc-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-2xl">🇸🇬</span>
+                    <h1 class="text-2xl font-extrabold text-teal-700 tracking-tight">싱가포르 나 홀로 자유여행</h1>
+                </div>
+                <p class="text-zinc-400 text-sm font-medium">2026.08.25 (화) - 08.28 (금) | 3박 4일 일정</p>
+            </div>
+            <div class="flex gap-4">
+                <div class="text-right">
+                    <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Weather (Aug)</p>
+                    <p class="text-lg font-extrabold text-orange-500">31°C 건기</p>
+                </div>
+                <div class="h-10 w-[1px] bg-zinc-100"></div>
+                <div class="text-right">
+                    <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Exchange Rate</p>
+                    <p class="text-lg font-extrabold text-zinc-700">1 SGD ≈ 1,020원</p>
+                </div>
+            </div>
         </header>
 
-        <!-- Intro Section -->
-        <section class="mb-12 bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-            <h2 class="text-2xl font-bold mb-4 flex items-center">
-                <span class="mr-2">ℹ️</span> 싱가포르 기초 정보
-            </h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="p-4 rounded-2xl bg-teal-50 border border-teal-100">
-                    <p class="text-sm text-teal-600 mb-1 font-semibold">치안</p>
-                    <p class="text-lg font-bold">세계 1위 수준</p>
+        <!-- Section: Essential Insight -->
+        <section class="mb-10">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold flex items-center gap-2">
+                    <span class="p-1.5 bg-teal-100 text-teal-700 rounded-lg">📌</span> 싱가포르 입국 전 필수 가이드
+                </h2>
+                <p class="text-zinc-500 text-sm mt-1">안전하고 쾌적한 여행을 위해 꼭 알아두어야 할 싱가포르의 기본 정보입니다.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm hover:shadow-md transition-shadow">
+                    <h3 class="font-bold text-teal-700 mb-2 flex items-center gap-2">🪪 국가 및 법률</h3>
+                    <p class="text-xs text-zinc-600 leading-relaxed">
+                        다민족(중국, 말레이, 인도)이 공존하는 영어 통용 국가입니다. 특히 **껌 반입 금지법**은 지하철 센서 오작동 대란을 막기 위해 1992년 제정되었습니다. 가방에 껌이 없도록 확인하세요!
+                    </p>
                 </div>
-                <div class="p-4 rounded-2xl bg-orange-50 border border-orange-100">
-                    <p class="text-sm text-orange-600 mb-1 font-semibold">환율</p>
-                    <p class="text-lg font-bold">1 SGD ≈ 1,020원</p>
+                <div class="bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm hover:shadow-md transition-shadow">
+                    <h3 class="font-bold text-orange-600 mb-2 flex items-center gap-2">☀️ 8월 말 날씨 & 습도</h3>
+                    <p class="text-xs text-zinc-600 leading-relaxed">
+                        화창한 **건기**에 속하며 스콜(소나기)이 짧게 지나갑니다. 습도는 평균 80%로 높지만 바람이 불어 야외 활동이 가능합니다. **에어컨이 매우 강한 실내**를 대비해 얇은 겉옷은 필수입니다.
+                    </p>
                 </div>
-                <div class="p-4 rounded-2xl bg-blue-50 border border-blue-100">
-                    <p class="text-sm text-blue-600 mb-1 font-semibold">언어</p>
-                    <p class="text-lg font-bold">영어 (소통 원활)</p>
-                </div>
-                <div class="p-4 rounded-2xl bg-purple-50 border border-purple-100">
-                    <p class="text-sm text-purple-600 mb-1 font-semibold">무비자</p>
-                    <p class="text-lg font-bold">90일 체류 가능</p>
+                <div class="bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm hover:shadow-md transition-shadow">
+                    <h3 class="font-bold text-blue-600 mb-2 flex items-center gap-2">💳 교통 & 결제</h3>
+                    <p class="text-xs text-zinc-600 leading-relaxed">
+                        환전보다 **컨택리스 신용카드(트래블로그, 트래블월렛 등)**가 월등히 편리합니다. MRT와 버스 모두 한국 카드를 찍고 즉시 탑승할 수 있으며, 택시는 'Grab' 앱을 추천합니다.
+                    </p>
                 </div>
             </div>
-            <p class="mt-4 text-gray-600 text-sm leading-relaxed">
-                싱가포르는 다민족 국가로 영어 소통이 매우 원활하며, 한국 문화에 대한 호감도가 높습니다. 껌 반입 금지, 지하철 취식 금지 등 강력한 법치주의 국가이므로 주의가 필요합니다.
-            </p>
         </section>
 
-        <!-- Weather & Logistics Section -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <section class="bg-white rounded-3xl p-6 shadow-sm">
-                <h3 class="text-xl font-bold mb-4 flex items-center">🌡️ 8월 말 기온 분석</h3>
-                <div class="chart-container">
-                    <canvas id="weatherChart"></canvas>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <!-- Left: Itinerary Timeline (2/3 width) -->
+            <div class="lg:col-span-2">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold flex items-center gap-2">
+                        <span class="p-1.5 bg-zinc-200 text-zinc-700 rounded-lg">🗺️</span> 인터랙티브 여행 로드맵
+                    </h2>
+                    <p class="text-zinc-500 text-sm mt-1">대학생 1인 기준, 가성비와 동선 효율을 극대화한 3박 4일 일정입니다. (지정한 숙소 기준)</p>
                 </div>
-                <p class="text-xs text-gray-500 mt-4">건기이지만 스콜이 잦으므로 우산 필수. 실내 에어컨이 매우 강하니 얇은 가디건을 꼭 챙기세요.</p>
-            </section>
 
-            <section class="bg-white rounded-3xl p-6 shadow-sm">
-                <h3 class="text-xl font-bold mb-4 flex items-center">✈️ 항공 및 숙소 요약</h3>
-                <div class="space-y-4">
-                    <div class="flex items-start">
-                        <div class="bg-gray-100 p-2 rounded-lg mr-3 text-xl">🛫</div>
-                        <div>
-                            <p class="font-bold">티웨이항공 (직항)</p>
-                            <p class="text-sm text-gray-600">₩381,500 | 21:30 도착 - 23:00 출발</p>
-                        </div>
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-zinc-100">
+                    <!-- Day Selector -->
+                    <div class="flex p-1.5 bg-zinc-100 rounded-2xl mb-8 space-x-1">
+                        <button onclick="changeDay(1)" id="day1-btn" class="flex-1 py-2.5 text-sm font-bold rounded-xl transition-all bg-white text-teal-700 shadow-sm">DAY 1</button>
+                        <button onclick="changeDay(2)" id="day2-btn" class="flex-1 py-2.5 text-sm font-bold rounded-xl transition-all text-zinc-500">DAY 2</button>
+                        <button onclick="changeDay(3)" id="day3-btn" class="flex-1 py-2.5 text-sm font-bold rounded-xl transition-all text-zinc-500">DAY 3</button>
+                        <button onclick="changeDay(4)" id="day4-btn" class="flex-1 py-2.5 text-sm font-bold rounded-xl transition-all text-zinc-500">DAY 4</button>
                     </div>
-                    <div class="flex items-start">
-                        <div class="bg-gray-100 p-2 rounded-lg mr-3 text-xl">🏨</div>
-                        <div>
-                            <p class="font-bold">차이나타운 가성비 호텔</p>
-                            <p class="text-sm text-gray-600">3성급 역세권 추천 | MRT 이동 최적화</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="bg-gray-100 p-2 rounded-lg mr-3 text-xl">💳</div>
-                        <div>
-                            <p class="font-bold">현지 교통</p>
-                            <p class="text-sm text-gray-600">트래블월렛/로그 카드 태그 결제 (충전 불필요)</p>
-                        </div>
+
+                    <!-- Timeline Content -->
+                    <div id="timeline-box" class="space-y-6 min-h-[400px]">
+                        <!-- JS renders content here -->
                     </div>
                 </div>
-            </section>
+            </div>
+
+            <!-- Right: Budget & Packing List (1/3 width) -->
+            <div class="space-y-10">
+                <!-- Budget Analysis -->
+                <section>
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold flex items-center gap-2">
+                            <span class="p-1.5 bg-emerald-100 text-emerald-700 rounded-lg">💰</span> 현실 예산 분석
+                        </h2>
+                        <p class="text-zinc-500 text-sm mt-1">실제 결제 시 수하물 추가, 수수료 및 비상시를 대비해 여유 있게 책정한 예산입니다.</p>
+                    </div>
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-zinc-100">
+                        <div class="chart-container">
+                            <canvas id="budgetChart"></canvas>
+                        </div>
+                        <div class="mt-6 pt-6 border-t border-zinc-50">
+                            <div class="flex justify-between text-xs font-bold mb-2">
+                                <span class="text-zinc-400 uppercase tracking-tighter">항목별 예상액</span>
+                                <span class="text-teal-700">총 1,380,000원</span>
+                            </div>
+                            <ul class="space-y-2">
+                                <li class="flex justify-between text-sm">
+                                    <span class="text-zinc-500">✈️ 항공권 </span>
+                                    <span class="font-bold text-zinc-700">400,000원</span>
+                                </li>
+                                <li class="flex justify-between text-sm">
+                                    <span class="text-zinc-500">🏨 숙박 예산 (3성 비즈니스 호텔 평균 기준)</span>
+                                    <span class="font-bold text-zinc-700">450,000원</span>
+                                </li>
+                                <li class="flex justify-between text-sm">
+                                    <span class="text-zinc-500">🍱 식비 (칠리크랩 및 현지 먹방 넉넉히)</span>
+                                    <span class="font-bold text-zinc-700">220,000원</span>
+                                </li>
+                                <li class="flex justify-between text-sm">
+                                    <span class="text-zinc-500">🎟️ 액티비티 (유니버셜+리버크루즈)</span>
+                                    <span class="font-bold text-zinc-700">110,000원</span>
+                                </li>
+                                <li class="flex justify-between text-sm">
+                                    <span class="text-zinc-500">🚕 교통비 (대중교통 및 비상 그랩 대비)</span>
+                                    <span class="font-bold text-zinc-700">80,000원</span>
+                                </li>
+                                <li class="flex justify-between text-sm">
+                                    <span class="text-zinc-500">🛍️ 쇼핑/선물 (바샤커피, 해피히포 등)</span>
+                                    <span class="font-bold text-zinc-700">120,000원</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Essential Packing Checklist Section -->
+                <section>
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold flex items-center gap-2">
+                            <span class="p-1.5 bg-purple-100 text-purple-700 rounded-lg">🧳</span> 실전 준비물 체크리스트
+                        </h2>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-50 to-white rounded-3xl p-6 border border-purple-100">
+                        <ul class="space-y-4">
+                            <li class="flex gap-3">
+                                <span class="text-lg">💳</span>
+                                <div>
+                                    <p class="text-sm font-bold text-purple-900">컨택리스 결제 카드</p>
+                                    <p class="text-xs text-purple-600">트래블로그 또는 트래블월렛 필수 (MRT 탑승용)</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="text-lg">🧥</span>
+                                <div>
+                                    <p class="text-sm font-bold text-purple-900">얇은 가디건 또는 셔츠</p>
+                                    <p class="text-xs text-purple-600">냉동고 수준의 실내 강한 에어컨 방어용</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="text-lg">🌂</span>
+                                <div>
+                                    <p class="text-sm font-bold text-purple-900">3단 암막 양우산</p>
+                                    <p class="text-xs text-purple-600">뜨거운 한낮 햇빛과 오후 짧은 스콜 동시 방지</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="text-lg">🚫</span>
+                                <div>
+                                    <p class="text-sm font-bold text-purple-900">껌 소지 금지</p>
+                                    <p class="text-xs text-purple-600">가방 구석에 껌이나 츄잉껌이 없는지 사전 확인</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
         </div>
-
-        <!-- Interactive Itinerary Section -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold mb-6 flex items-center">🗺️ 3박 4일 실전 라우팅</h2>
-            <div class="flex overflow-x-auto space-x-2 mb-6 pb-2">
-                <button onclick="showDay(1)" class="nav-tab active px-6 py-2 rounded-full border border-gray-200 font-semibold transition-all">DAY 1</button>
-                <button onclick="showDay(2)" class="nav-tab px-6 py-2 rounded-full border border-gray-200 font-semibold transition-all">DAY 2</button>
-                <button onclick="showDay(3)" class="nav-tab px-6 py-2 rounded-full border border-gray-200 font-semibold transition-all">DAY 3</button>
-                <button onclick="showDay(4)" class="nav-tab px-6 py-2 rounded-full border border-gray-200 font-semibold transition-all">DAY 4</button>
-            </div>
-
-            <div id="day-1" class="day-content active bg-white rounded-3xl p-8 shadow-sm">
-                <h3 class="text-xl font-bold text-[#008080] mb-4">1일 차: 입국 및 안착</h3>
-                <div class="border-l-2 border-dashed border-teal-200 ml-3 space-y-8">
-                    <div class="relative pl-8">
-                        <span class="absolute left-[-9px] top-0 w-4 h-4 bg-teal-500 rounded-full"></span>
-                        <p class="text-sm text-teal-600 font-bold mb-1">21:30</p>
-                        <p class="font-bold">창이 공항 도착</p>
-                        <p class="text-sm text-gray-600">그랩(Grab) 택시 이용 시내 이동 (약 25분 / 30 SGD)</p>
-                    </div>
-                    <div class="relative pl-8">
-                        <span class="absolute left-[-9px] top-0 w-4 h-4 bg-gray-300 rounded-full"></span>
-                        <p class="text-sm text-teal-600 font-bold mb-1">22:30</p>
-                        <p class="font-bold">호텔 체크인</p>
-                        <p class="text-sm text-gray-600">숙소 인근 편의점 이용 및 휴식</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="day-2" class="day-content bg-white rounded-3xl p-8 shadow-sm">
-                <h3 class="text-xl font-bold text-[#008080] mb-4">2일 차: 시내 정복 및 야경</h3>
-                <div class="border-l-2 border-dashed border-teal-200 ml-3 space-y-8">
-                    <div class="relative pl-8">
-                        <span class="absolute left-[-9px] top-0 w-4 h-4 bg-teal-500 rounded-full"></span>
-                        <p class="text-sm text-teal-600 font-bold mb-1">10:00</p>
-                        <p class="font-bold">야쿤 카야 토스트 (본점)</p>
-                        <p class="text-sm text-gray-600">카야 토스트 세트 (6.5 SGD)</p>
-                    </div>
-                    <div class="relative pl-8">
-                        <span class="absolute left-[-9px] top-0 w-4 h-4 bg-gray-300 rounded-full"></span>
-                        <p class="text-sm text-teal-600 font-bold mb-1">14:00</p>
-                        <p class="font-bold">오차드 로드 쇼핑몰 피서</p>
-                        <p class="text-sm text-gray-600">에어컨 빵빵한 아이온 오차드에서 치킨라이스 점심</p>
-                    </div>
-                    <div class="relative pl-8">
-                        <span class="absolute left-[-9px] top-0 w-4 h-4 bg-gray-300 rounded-full"></span>
-                        <p class="text-sm text-teal-600 font-bold mb-1">19:30</p>
-                        <p class="font-bold">리버 크루즈 & 뉴튼 호커센터</p>
-                        <p class="text-sm text-gray-600">1인 칠리크랩 세트(45 SGD)로 완벽한 저녁</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="day-3" class="day-content bg-white rounded-3xl p-8 shadow-sm">
-                <h3 class="text-xl font-bold text-[#008080] mb-4">3일 차: 테마파크 정복의 날</h3>
-                <div class="border-l-2 border-dashed border-teal-200 ml-3 space-y-8">
-                    <div class="relative pl-8">
-                        <span class="absolute left-[-9px] top-0 w-4 h-4 bg-teal-500 rounded-full"></span>
-                        <p class="text-sm text-teal-600 font-bold mb-1">10:00</p>
-                        <p class="font-bold">유니버셜 스튜디오 싱가포르 (USS)</p>
-                        <p class="text-sm text-gray-600">'싱글 라이더' 줄 활용하여 무한 탑승 (목요일 눈치싸움 성공)</p>
-                    </div>
-                    <div class="relative pl-8">
-                        <span class="absolute left-[-9px] top-0 w-4 h-4 bg-gray-300 rounded-full"></span>
-                        <p class="text-sm text-teal-600 font-bold mb-1">16:30</p>
-                        <p class="font-bold">송파 바쿠테</p>
-                        <p class="text-sm text-gray-600">뜨끈한 갈비탕으로 체력 충전 (리필 가능)</p>
-                    </div>
-                    <div class="relative pl-8">
-                        <span class="absolute left-[-9px] top-0 w-4 h-4 bg-gray-300 rounded-full"></span>
-                        <p class="text-sm text-teal-600 font-bold mb-1">19:45</p>
-                        <p class="font-bold">슈퍼트리 쇼 (가든 랩소디)</p>
-                        <p class="text-sm text-gray-600">무료 야외 공연. 잔디밭에 누워 관람 필수</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="day-4" class="day-content bg-white rounded-3xl p-8 shadow-sm">
-                <h3 class="text-xl font-bold text-[#008080] mb-4">4일 차: 기념품 및 귀국</h3>
-                <div class="border-l-2 border-dashed border-teal-200 ml-3 space-y-8">
-                    <div class="relative pl-8">
-                        <span class="absolute left-[-9px] top-0 w-4 h-4 bg-teal-500 rounded-full"></span>
-                        <p class="text-sm text-teal-600 font-bold mb-1">10:00</p>
-                        <p class="font-bold">하지 레인 & 아랍 스트리트</p>
-                        <p class="text-sm text-gray-600">이국적인 벽화와 술탄 모스크 배경 인생샷 촬영</p>
-                    </div>
-                    <div class="relative pl-8">
-                        <span class="absolute left-[-9px] top-0 w-4 h-4 bg-gray-300 rounded-full"></span>
-                        <p class="text-sm text-teal-600 font-bold mb-1">12:00</p>
-                        <p class="font-bold">바샤 커피 (Bacha Coffee)</p>
-                        <p class="text-sm text-gray-600">고급 커피 시음 및 지인 선물 드립백 구매</p>
-                    </div>
-                    <div class="relative pl-8">
-                        <span class="absolute left-[-9px] top-0 w-4 h-4 bg-gray-300 rounded-full"></span>
-                        <p class="text-sm text-teal-600 font-bold mb-1">20:00</p>
-                        <p class="font-bold">쥬얼 창이공항 레인 보텍스</p>
-                        <p class="text-sm text-gray-600">세계 최고 인공 폭포 감상 후 밤 비행기 탑승</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Budget Section -->
-        <section class="bg-white rounded-3xl p-8 shadow-sm mb-12">
-            <h2 class="text-2xl font-bold mb-6 flex items-center">💰 예산 요약 (1인 기준)</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div class="chart-container">
-                    <canvas id="budgetChart"></canvas>
-                </div>
-                <div>
-                    <div class="space-y-3">
-                        <div class="flex justify-between border-b pb-2">
-                            <span>항공권</span><span class="font-bold text-[#008080]">₩381,500</span>
-                        </div>
-                        <div class="flex justify-between border-b pb-2">
-                            <span>숙박(3박)</span><span class="font-bold text-[#008080]">₩450,000</span>
-                        </div>
-                        <div class="flex justify-between border-b pb-2">
-                            <span>식비</span><span class="font-bold text-[#008080]">₩150,000</span>
-                        </div>
-                        <div class="flex justify-between border-b pb-2">
-                            <span>활동/교통</span><span class="font-bold text-[#008080]">₩148,000</span>
-                        </div>
-                        <div class="flex justify-between border-b pb-2">
-                            <span>기념품</span><span class="font-bold text-[#008080]">₩100,000</span>
-                        </div>
-                        <div class="flex justify-between pt-4 text-xl">
-                            <span class="font-bold">합계</span><span class="font-extrabold text-[#E2725B]">약 1,229,500원</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Packing & Laws Checklist -->
-        <section class="mb-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-teal-50 rounded-3xl p-6 border border-teal-100">
-                    <h3 class="text-lg font-bold mb-4">🎒 필수 준비물</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li class="flex items-center"><span class="mr-2">✔️</span> 얇은 가디건 (에어컨 방어)</li>
-                        <li class="flex items-center"><span class="mr-2">✔️</span> 3단 암막 양우산 (태양 & 스콜)</li>
-                        <li class="flex items-center"><span class="mr-2">✔️</span> 트래블월렛/로그 카드</li>
-                        <li class="flex items-center"><span class="mr-2">✔️</span> 싱가포르 SG 입국신고서 (온라인)</li>
-                    </ul>
-                </div>
-                <div class="bg-red-50 rounded-3xl p-6 border border-red-100">
-                    <h3 class="text-lg font-bold mb-4">🚫 주의 사항 (벌금 제도)</h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li class="flex items-center"><span class="mr-2">⚠️</span> 껌 반입 및 씹기 금지</li>
-                        <li class="flex items-center"><span class="mr-2">⚠️</span> 지하철 내 음식/물 취식 금지</li>
-                        <li class="flex items-center"><span class="mr-2">⚠️</span> 무단횡단 절대 금지</li>
-                        <li class="flex items-center"><span class="mr-2">⚠️</span> 쓰레기 투기 금지</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <footer class="text-center text-gray-400 text-sm py-8">
-            &copy; 2026 싱가포르 나 홀로 여행 가이드 | 본 프로그램은 실전 최적화 데이터를 기반으로 합니다.
-        </footer>
     </div>
 
     <script>
-        // Tab Navigation
-        function showDay(dayNum) {
-            document.querySelectorAll('.day-content').forEach(content => content.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+        const timelineData = {
+            1: [
+                { time: "21:30", title: "싱가포르 창이 공항 도착", desc: "그랩(Grab) 또는 공식 택시로 예약하실 숙소로 이동 (약 30 SGD 소요)", cost: "30,000원" },
+                { time: "22:30", title: "숙소 체크인 및 휴식", desc: "지정하신 숙소에 안전하게 체크인 후 휴식", cost: "-" }
+            ],
+            2: [
+                { time: "10:00", title: "야쿤 카야 토스트 본점", desc: "바삭한 토스트와 수란 세트로 든든한 아침 식사", cost: "7,000원" },
+                { time: "11:30", title: "오차드 로드 아이온 몰", desc: "한낮 폭염 대피용 에어컨 빵빵한 쇼핑몰 투어", cost: "-" },
+                { time: "17:00", title: "멀라이언 파크 인증샷", desc: "머라이언 동상 앞 입벌리기 시그니처 사진 촬영 (입장 무료)", cost: "-" },
+                { time: "19:30", title: "클락 키 리버 크루즈", desc: "강바람을 맞으며 즐기는 환상적인 도심 야경 투어", cost: "18,000원" },
+                { time: "20:30", title: "뉴튼 호커센터 (칠리크랩)", desc: "1인 세트로 가성비 있게 싱가포르 필수 음식인 칠리크랩 정복", cost: "46,000원" }
+            ],
+            3: [
+                { time: "10:00", title: "유니버셜 스튜디오 싱가포르", desc: "목요일 평일 찬스! '싱글 라이더' 전용 대기줄로 트랜스포머/머미 롤러코스터 무한 탑승", cost: "80,000원" },
+                { time: "16:30", title: "송파 바쿠테 본점", desc: "한국식 갈비탕과 싱크로율 95%인 보양식, 뜨끈한 국물 무한 리필", cost: "10,000원" },
+                { time: "19:00", title: "가든스 바이 더 베이", desc: "슈퍼트리 쇼 '가든 랩소디' 감상 (입장 무료, 잔디밭 누워보기 권장)", cost: "-" }
+            ],
+            4: [
+                { time: "10:00", title: "아랍 스트리트 & 하지 레인", desc: "황금 돔 사원과 감각적인 벽화 골목을 배경으로 자유롭게 사진 촬영", cost: "-" },
+                { time: "12:00", title: "바샤 커피 (마리나 샌즈몰)", desc: "고급 크루아상 & 커피 테이크아웃 체험 및 선물용 제품 탐색", cost: "18,000원" },
+                { time: "19:30", title: "쥬얼 창이 레인 보텍스", desc: "공항 내 위치한 세계 최대 실내 폭포 감상 및 면세점 기념품 쇼핑", cost: "선택적" },
+                { time: "23:00", title: "귀국행 비행기 탑승", desc: "3박 4일 전체 일정 종료 후 한국행 출발", cost: "-" }
+            ]
+        };
+
+        function renderTimeline(day) {
+            const container = document.getElementById('timeline-box');
+            container.innerHTML = '';
             
-            document.getElementById(`day-${dayNum}`).classList.add('active');
-            event.target.classList.add('active');
+            timelineData[day].forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'flex gap-4 group';
+                itemDiv.innerHTML = `
+                    <div class="flex flex-col items-center">
+                        <div class="w-2.5 h-2.5 rounded-full bg-teal-600 ring-4 ring-teal-50"></div>
+                        <div class="flex-1 w-0.5 bg-zinc-100 my-2"></div>
+                    </div>
+                    <div class="pb-6">
+                        <span class="text-[10px] font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full uppercase tracking-widest">${item.time}</span>
+                        <h4 class="text-sm font-extrabold text-zinc-800 mt-1">${item.title}</h4>
+                        <p class="text-xs text-zinc-500 mt-1 leading-relaxed">${item.desc}</p>
+                        ${item.cost !== '-' ? `<span class="inline-block mt-2 text-[10px] text-zinc-400 font-bold">예상 비용: ${item.cost}</span>` : ''}
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
         }
 
-        // Weather Chart
-        const weatherCtx = document.getElementById('weatherChart').getContext('2d');
-        new Chart(weatherCtx, {
-            type: 'bar',
-            data: {
-                labels: ['최저 기온', '최고 기온'],
-                datasets: [{
-                    label: '온도 (°C)',
-                    data: [25, 32],
-                    backgroundColor: ['#AEEEEE', '#E2725B'],
-                    borderRadius: 10,
-                    barThickness: 40
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: { beginAtZero: false, min: 20, max: 40 }
-                }
-            }
-        });
+        function changeDay(day) {
+            [1, 2, 3, 4].forEach(d => {
+                const btn = document.getElementById(`day${d}-btn`);
+                btn.className = "flex-1 py-2.5 text-sm font-bold rounded-xl transition-all text-zinc-500";
+            });
+            const activeBtn = document.getElementById(`day${day}-btn`);
+            activeBtn.className = "flex-1 py-2.5 text-sm font-bold rounded-xl transition-all bg-white text-teal-700 shadow-sm";
+            renderTimeline(day);
+        }
 
-        // Budget Chart
-        const budgetCtx = document.getElementById('budgetChart').getContext('2d');
-        new Chart(budgetCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['항공', '숙박', '식비', '액티비티/교통', '기념품'],
-                datasets: [{
-                    data: [381500, 450000, 150000, 148000, 100000],
-                    backgroundColor: ['#008080', '#20B2AA', '#E2725B', '#FFA07A', '#D1D5DB'],
-                    borderWidth: 0,
-                    hoverOffset: 10
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom', labels: { boxWidth: 12, padding: 20 } }
+        function initChart() {
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['항공권', '숙박비 (3박)', '식비', '기타 (교통/액티비티/쇼핑)'],
+                    datasets: [{
+                        data: [29, 33, 16, 22], // 40만, 45만, 22만, 31만
+                        backgroundColor: ['#0d9488', '#0ea5e9', '#f97316', '#a855f7'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10, weight: 'bold' } } }
+                    },
+                    cutout: '70%'
                 }
-            }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTimeline(1);
+            initChart();
         });
     </script>
 </body>
